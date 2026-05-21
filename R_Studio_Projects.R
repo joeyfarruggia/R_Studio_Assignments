@@ -825,3 +825,46 @@ source(textConnection('
   # --- Confusion Matrix ---
   cat("\n=== Confusion Matrix ===\n")
   print(table(Predicted = predicted_labels, Actual = test_labels))
+  
+  
+  
+  # --- Load Dataset ---
+  data(mtcars)
+  
+  # --- Perform PCA ---
+  # Scale = TRUE standardizes variables (important since mtcars has different units)
+  pca_result <- prcomp(mtcars, scale = TRUE)
+  
+  # --- Print Summary ---
+  cat("=== PCA Summary ===\n")
+  print(summary(pca_result))
+  
+  # --- Variance Explained ---
+  variance_explained <- pca_result$sdev^2 / sum(pca_result$sdev^2) * 100
+  cat("\n=== Variance Explained by Each PC ===\n")
+  for (i in 1:length(variance_explained)) {
+    cat("PC", i, ":", round(variance_explained[i], 2), "%\n")
+  }
+  
+  # --- Scatter Plot of First Two Principal Components ---
+  pc_scores <- as.data.frame(pca_result$x)
+  
+  plot(
+    pc_scores$PC1, pc_scores$PC2,
+    col = "steelblue",
+    pch = 19,
+    main = "PCA of mtcars - PC1 vs PC2",
+    xlab = paste0("PC1 (", round(variance_explained[1], 1), "% variance)"),
+    ylab = paste0("PC2 (", round(variance_explained[2], 1), "% variance)")
+  )
+  
+  # Add car name labels to each point
+  text(
+    pc_scores$PC1, pc_scores$PC2,
+    labels = rownames(mtcars),
+    cex = 0.6,
+    pos = 3
+  )
+  
+  # Add reference lines at zero
+  abline(h = 0, v = 0, lty = 2, col = "gray")
