@@ -780,3 +780,48 @@ source(textConnection('
          lty = c(NA, 1),
          lwd = c(NA, 2)
   )
+  
+  
+
+  library(class)
+  
+  # Load the iris dataset
+  data(iris)
+  
+  # --- Set seed for reproducibility ---
+  set.seed(42)
+  
+  # --- Split Data into Training and Testing Sets (70/30 split) ---
+  sample_index <- sample(1:nrow(iris), size = 0.7 * nrow(iris))
+  train_data <- iris[sample_index, ]
+  test_data <- iris[-sample_index, ]
+  
+  # --- Separate Features and Labels ---
+  train_features <- train_data[, 1:4]
+  test_features <- test_data[, 1:4]
+  train_labels <- train_data[, 5]
+  test_labels <- test_data[, 5]
+  
+  # --- Train and Predict with k-NN (k=3) ---
+  predicted_labels <- knn(
+    train = train_features,
+    test = test_features,
+    cl = train_labels,
+    k = 3
+  )
+  
+  # --- Calculate Accuracy ---
+  correct <- sum(predicted_labels == test_labels)
+  total <- length(test_labels)
+  accuracy <- (correct / total) * 100
+  
+  # --- Print Results ---
+  cat("=== k-NN Classifier Results (k=3) ===\n")
+  cat("Total Test Samples:", total, "\n")
+  cat("Correctly Classified:", correct, "\n")
+  cat("Incorrectly Classified:", total - correct, "\n")
+  cat("Accuracy:", round(accuracy, 2), "%\n")
+  
+  # --- Confusion Matrix ---
+  cat("\n=== Confusion Matrix ===\n")
+  print(table(Predicted = predicted_labels, Actual = test_labels))
