@@ -742,3 +742,41 @@ source(textConnection('
     pch = 19
   )
 
+  # Load the mtcars dataset
+  data(mtcars)
+  
+  # --- Train Linear Regression Model ---
+  model <- lm(mpg ~ hp, data = mtcars)
+  
+  # --- Model Summary ---
+  cat("=== Model Summary ===\n")
+  print(summary(model))
+  
+  # --- Model Coefficients ---
+  cat("=== Model Coefficients ===\n")
+  cat("Intercept:", round(coef(model)[1], 4), "\n")
+  cat("Slope (hp):", round(coef(model)[2], 4), "\n")
+  
+  # --- Predict mpg for 150 hp ---
+  new_car <- data.frame(hp = 150)
+  predicted_mpg <- predict(model, newdata = new_car)
+  cat("\n=== Prediction ===\n")
+  cat("Predicted MPG for 150 hp:", round(predicted_mpg, 2), "\n")
+  
+  # --- Scatter Plot with Regression Line ---
+  plot(
+    mtcars$hp, mtcars$mpg,
+    col = "steelblue",
+    pch = 19,
+    main = "MPG vs Horsepower (mtcars)",
+    xlab = "Horsepower (hp)",
+    ylab = "Miles Per Gallon (mpg)"
+  )
+  abline(model, col = "red", lwd = 2)
+  legend("topright",
+         legend = c("Actual Data", "Regression Line"),
+         col = c("steelblue", "red"),
+         pch = c(19, NA),
+         lty = c(NA, 1),
+         lwd = c(NA, 2)
+  )
